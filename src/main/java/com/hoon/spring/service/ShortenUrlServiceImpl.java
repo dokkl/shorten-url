@@ -1,13 +1,18 @@
 package com.hoon.spring.service;
 
 import com.hoon.spring.service.algorithm.ShortenUrlAlgorithm;
+import com.hoon.spring.service.exception.ShortenUrlNotFoundException;
 import com.hoon.spring.service.repository.ShortenUrl;
 import com.hoon.spring.service.repository.ShortenUrlRepository;
+import com.hoon.spring.service.vo.ShortenUrlVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  * ShortenUrlService 구현체
@@ -25,22 +30,26 @@ public class ShortenUrlServiceImpl implements ShortenUrlService {
     @Autowired
     private ShortenUrlRepository shortenUrlRepository;
 
+    @Value("${hoon.server.domain}")
+    private String serverDomain;
+
     @Transactional(readOnly = false)
-    public String findShortenUrl(String longUrl) {
+    public ShortenUrlVO findShortenUrl(String longUrl) {
         //longUrl을 DB에서 찾는다. 없으면 생성한다.
         ShortenUrl existShortenUrlEntity = shortenUrlRepository.findByOriginUrl(longUrl);
         if (existShortenUrlEntity != null) {
-            return existShortenUrlEntity.getShortenUrl();
+            return ShortenUrlVO.convertToVO(existShortenUrlEntity);
         }
 
         ShortenUrl shortenUrlEntity = new ShortenUrl();
         shortenUrlEntity.setOriginUrl(longUrl);
+        shortenUrlEntity.setCreatedAt(new Date());
         ShortenUrl savedShortenUrlEntity = shortenUrlRepository.save(shortenUrlEntity);
 
         String encodedUrl = shortenUrlAlgorithm.encode(savedShortenUrlEntity.getId());
         savedShortenUrlEntity.setShortenUrl(encodedUrl);
-
-        return encodedUrl;
+        savedShortenUrlEntity.setModifiedAt(new Date());
+        return ShortenUrlVO.convertToVO(savedShortenUrlEntity).add(serverDomain);
     }
 
     @Transactional(readOnly = true)
@@ -48,6 +57,9 @@ public class ShortenUrlServiceImpl implements ShortenUrlService {
         Long decodedkey = shortenUrlAlgorithm.decode(shortenUrl);
         ShortenUrl shortenUrlEntity = shortenUrlRepository.findOne(decodedkey);
         log.info("shortenUrlEntity : {} : {} : {}", shortenUrl, decodedkey, shortenUrlEntity);
+        if (shortenUrlEntity == null) {
+            throw new ShortenUrlNotFoundException("요청한 shorten URL이 존재하지 않습니다");
+        }
         return shortenUrlEntity.getOriginUrl();
     }
 }

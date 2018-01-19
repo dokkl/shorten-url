@@ -15,8 +15,11 @@
     <div>
         <span th:text="${message}"></span>
     </div>
-    <div>
-        <span th:text="${shortenUrl}"></span>
+
+    <div th:if="${shortenUrlVO != null}">
+        <span th:text="${shortenUrlVO.shortenUrl}"></span>
+        <span th:text="${shortenUrlVO.originUrl}"></span>
+        <span th:text="${shortenUrlVO.createdAt}"></span>
     </div>
 </body>
 </html>

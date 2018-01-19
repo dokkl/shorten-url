@@ -3,6 +3,7 @@ package com.hoon.spring.service;
 import com.hoon.spring.service.algorithm.ShortenUrlAlgorithm;
 import com.hoon.spring.service.repository.ShortenUrl;
 import com.hoon.spring.service.repository.ShortenUrlRepository;
+import com.hoon.spring.service.vo.ShortenUrlVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,8 @@ public class ShortenUrlServiceImplTest {
 
     ShortenUrl savedShortenUrlEntity = new ShortenUrl();
 
+    ShortenUrlVO shortenUrlVO = new ShortenUrlVO();
+
 
     @Before
     public void setup() {
@@ -74,8 +77,9 @@ public class ShortenUrlServiceImplTest {
 
         doReturn(shortenUrl).when(shortenUrlAlgorithm).encode(shortenUrlEntity.getId());
 
+
         //then
-        assertEquals(shortenUrlEntity.getShortenUrl(), shortenUrlService.findShortenUrl(longUrl));
+        assertEquals(ShortenUrlVO.convertToVO(shortenUrlEntity).getOriginUrl(), shortenUrlService.findShortenUrl(longUrl).getOriginUrl());
     }
 
     @Test
@@ -92,7 +96,7 @@ public class ShortenUrlServiceImplTest {
         savedShortenUrlEntity.setShortenUrl(shortenUrl);
 
         //then
-        assertEquals(savedShortenUrlEntity.getShortenUrl(), shortenUrlService.findShortenUrl(longUrl));
+        assertEquals(ShortenUrlVO.convertToVO(savedShortenUrlEntity).getShortenUrl(), shortenUrlService.findShortenUrl(longUrl).getShortenUrl());
     }
 
     @Test

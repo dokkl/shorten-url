@@ -1,6 +1,7 @@
 package com.hoon.spring.web;
 
 import com.hoon.spring.service.ShortenUrlService;
+import com.hoon.spring.service.vo.ShortenUrlVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,13 @@ public class ShortenUrlController {
             model.addAttribute("message", "올바른 URL이 아닙니다.");
             return "index";
         }
+        if (longUrl.length() > 255) {
+            model.addAttribute("message", "URL의 길이가 255 보다 작아야합니다.");
+            return "index";
+        }
 
-        String shortenUrl = shortenUrlService.findShortenUrl(longUrl);
-        model.addAttribute("shortenUrl", shortenUrl);
+        ShortenUrlVO shortenUrlVO = shortenUrlService.findShortenUrl(longUrl);
+        model.addAttribute("shortenUrlVO", shortenUrlVO);
         return "index";
     }
 }

@@ -17,12 +17,14 @@ public class HoonShortenUrlApplication implements CommandLineRunner {
 	private TableService tableService;
 
 	public static void main(String[] args) {
-		SpringApplication.run(HoonShortenUrlApplication.class, args);
+		SpringApplication app = new SpringApplication(HoonShortenUrlApplication.class);
+		//app.setAdditionalProfiles("production");
+		app.run(args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		tableService.createTable();
+		/*tableService.createTable();*/
 		tableService.createSequence();
 	}
 }
