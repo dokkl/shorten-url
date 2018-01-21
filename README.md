@@ -1,6 +1,7 @@
 **프로젝트 소개**
 
 shorten-url 은 웹화면에서 URL을 입력받아 짧게 줄여주고, Shortening된 URL을 브라우저에 입력하면 원래 URL로 리다이렉트하는 URL Shortening Service 입니다.
+source : https://github.com/dokkl/shorten-url
 
 _개발환경_
 
