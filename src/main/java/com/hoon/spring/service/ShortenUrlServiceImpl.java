@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.Date;
 
@@ -24,7 +25,7 @@ import java.util.Date;
 public class ShortenUrlServiceImpl implements ShortenUrlService {
 
     @Autowired
-    @Qualifier("algorithmBase62")
+    @Qualifier("algorithmBase32")
     private ShortenUrlAlgorithm shortenUrlAlgorithm;
 
     @Autowired
@@ -49,7 +50,7 @@ public class ShortenUrlServiceImpl implements ShortenUrlService {
         String encodedUrl = shortenUrlAlgorithm.encode(savedShortenUrlEntity.getId());
         savedShortenUrlEntity.setShortenUrl(encodedUrl);
         savedShortenUrlEntity.setModifiedAt(new Date());
-        return ShortenUrlVO.convertToVO(savedShortenUrlEntity).add(serverDomain);
+        return ShortenUrlVO.convertToVO(savedShortenUrlEntity).add(getServerDomain());
     }
 
     @Transactional(readOnly = true)
@@ -61,5 +62,12 @@ public class ShortenUrlServiceImpl implements ShortenUrlService {
             throw new ShortenUrlNotFoundException("요청한 shorten URL이 존재하지 않습니다");
         }
         return shortenUrlEntity.getOriginUrl();
+    }
+
+    private String getServerDomain() {
+        if (StringUtils.isEmpty(serverDomain)) {
+            return "http://localhost:8080/";
+        }
+        return serverDomain;
     }
 }

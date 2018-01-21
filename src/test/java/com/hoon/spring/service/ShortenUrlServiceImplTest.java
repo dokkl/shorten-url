@@ -44,12 +44,8 @@ public class ShortenUrlServiceImplTest {
     private Long key = 0L;
     String longUrl = "longUrl";
     ShortenUrl shortenUrlEntity = new ShortenUrl();
-
     ShortenUrl shortenUrlEntity1 = new ShortenUrl();
-
-
     ShortenUrl savedShortenUrlEntity = new ShortenUrl();
-
     ShortenUrlVO shortenUrlVO = new ShortenUrlVO();
 
 
@@ -57,12 +53,9 @@ public class ShortenUrlServiceImplTest {
     public void setup() {
         shortenUrlEntity = new ShortenUrl();
         shortenUrlEntity.setOriginUrl("http://coupang/com/1234567890");
-
         shortenUrlEntity1.setOriginUrl(longUrl);
-
         savedShortenUrlEntity.setOriginUrl(longUrl);
         savedShortenUrlEntity.setId(0L);
-
     }
 
     @Test
@@ -96,7 +89,7 @@ public class ShortenUrlServiceImplTest {
         savedShortenUrlEntity.setShortenUrl(shortenUrl);
 
         //then
-        assertEquals(ShortenUrlVO.convertToVO(savedShortenUrlEntity).getShortenUrl(), shortenUrlService.findShortenUrl(longUrl).getShortenUrl());
+        assertEquals("http://localhost:8080/" + ShortenUrlVO.convertToVO(savedShortenUrlEntity).getShortenUrl(), shortenUrlService.findShortenUrl(longUrl).getShortenUrl());
     }
 
     @Test

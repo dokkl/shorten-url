@@ -9,21 +9,21 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@Qualifier("algorithmBase62")
-public class ShortenUrlAlgorithmBase62Impl implements ShortenUrlAlgorithm {
+@Qualifier("algorithmBase32")
+public class ShortenUrlAlgorithmBase32Impl implements ShortenUrlAlgorithm {
     /**
-     * BASE62 Character Table
+     * BASE32 Character Table
      */
-    static final char[] BASE62 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+    static final char[] BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".toCharArray();
 
     @Override
     public String encode(Long value) {
         final StringBuilder sb = new StringBuilder();
         do {
             int i = (int)(value % 62);
-            sb.append(BASE62[i]);
-            log.info("62encode : {} , sb : {} : {} : {}", String.format("%10d", value), String.format("%2d", i), BASE62[i], sb.toString());
-            value /= 62;
+            sb.append(BASE32[i]);
+            log.info("32encode : {} , sb : {} : {} : {}", String.format("%10d", value), String.format("%2d", i), BASE32[i], sb.toString());
+            value /= 32;
         } while (value > 0);
         return sb.toString();
     }
@@ -33,11 +33,13 @@ public class ShortenUrlAlgorithmBase62Impl implements ShortenUrlAlgorithm {
         long result = 0;
         long power = 1;
         for (int i = 0; i < value.length(); i++) {
-            int digit = new String(BASE62).indexOf(value.charAt(i));
+            int digit = new String(BASE32).indexOf(value.charAt(i));
             result += digit * power;
-            log.info("62decode : {} : {} : {}", value.charAt(i), String.format("%2d", digit), String.format("%10d", result));
-            power *= 62;
+            log.info("32decode : {} : {} : {}", value.charAt(i), String.format("%2d", digit), String.format("%10d", result));
+            power *= 32;
         }
         return result;
     }
+
+
 }
