@@ -29,9 +29,10 @@ spring boot 에 embedd tomcat 에서 동작
 
 **실행방법**
 
-아래 방법 두가지중 선택하여 실행
+아래 방법 세가지중 선택하여 실행
 1. HoonShortenUrlApplication 의 main 메소드 실행 (개발 tool(intellij) 에서 실행하기 편한 방법)
-2. 프로젝트홈/build/libs 디렉토리로 이동후 jar파일 실행
+2. intellij의 우측의 gradle projects 창에서 bootRun 클릭
+3. 프로젝트홈/build/libs 디렉토리로 이동후 jar파일 실행
    ex) 1. cd /Users/coupang/dev/workspace/shorten-url/build/libs
        2. java -jar shorten-url-0.0.1-SNAPSHOT.jar
 
