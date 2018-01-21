@@ -19,6 +19,7 @@ public class HoonShortenUrlApplication implements CommandLineRunner {
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(HoonShortenUrlApplication.class);
 		//app.setAdditionalProfiles("production");
+		app.setAdditionalProfiles("local");
 		app.run(args);
 	}
 

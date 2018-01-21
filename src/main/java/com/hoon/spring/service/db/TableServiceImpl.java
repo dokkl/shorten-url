@@ -1,7 +1,5 @@
 package com.hoon.spring.service.db;
 
-import com.hoon.spring.service.repository.ShortenUrl;
-import com.hoon.spring.service.repository.ShortenUrlRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,9 +13,6 @@ import org.springframework.stereotype.Service;
 public class TableServiceImpl implements TableService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private ShortenUrlRepository shortenUrlRepository;
 
     public void createTable() {
         log.info("> 테이블 생성 시작");

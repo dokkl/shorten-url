@@ -1,6 +1,7 @@
 package com.hoon.spring.service.repository;
 
 import com.hoon.spring.infra.test.IntegrationTest;
+import com.hoon.spring.service.ShortenUrlService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
