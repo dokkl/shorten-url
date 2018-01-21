@@ -16,14 +16,16 @@ public class ShortenUrlAlgorithmBase62Impl implements ShortenUrlAlgorithm {
      */
     static final char[] BASE62 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
 
+    static final int NUMBER_62 = 62;
+
     @Override
     public String encode(Long value) {
         final StringBuilder sb = new StringBuilder();
         do {
-            int i = (int)(value % 62);
+            int i = (int)(value % NUMBER_62);
             sb.append(BASE62[i]);
             log.info("62encode : {} , sb : {} : {} : {}", String.format("%10d", value), String.format("%2d", i), BASE62[i], sb.toString());
-            value /= 62;
+            value /= NUMBER_62;
         } while (value > 0);
         return sb.toString();
     }
@@ -36,7 +38,7 @@ public class ShortenUrlAlgorithmBase62Impl implements ShortenUrlAlgorithm {
             int digit = new String(BASE62).indexOf(value.charAt(i));
             result += digit * power;
             log.info("62decode : {} : {} : {}", value.charAt(i), String.format("%2d", digit), String.format("%10d", result));
-            power *= 62;
+            power *= NUMBER_62;
         }
         return result;
     }

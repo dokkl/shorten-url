@@ -16,14 +16,16 @@ public class ShortenUrlAlgorithmBase32Impl implements ShortenUrlAlgorithm {
      */
     static final char[] BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".toCharArray();
 
+    static final int NUMBER_32 = 32;
+
     @Override
     public String encode(Long value) {
         final StringBuilder sb = new StringBuilder();
         do {
-            int i = (int)(value % 32);
+            int i = (int)(value % NUMBER_32);
             sb.append(BASE32[i]);
             log.info("32encode : {} , sb : {} : {} : {}", String.format("%10d", value), String.format("%2d", i), BASE32[i], sb.toString());
-            value /= 32;
+            value /= NUMBER_32;
         } while (value > 0);
         return sb.toString();
     }
@@ -36,7 +38,7 @@ public class ShortenUrlAlgorithmBase32Impl implements ShortenUrlAlgorithm {
             int digit = new String(BASE32).indexOf(value.charAt(i));
             result += digit * power;
             log.info("32decode : {} : {} : {}", value.charAt(i), String.format("%2d", digit), String.format("%10d", result));
-            power *= 32;
+            power *= NUMBER_32;
         }
         return result;
     }
