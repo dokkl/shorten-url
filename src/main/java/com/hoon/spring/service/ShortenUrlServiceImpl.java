@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.PrePersist;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * ShortenUrlService 구현체
@@ -25,7 +28,8 @@ import java.util.Date;
 public class ShortenUrlServiceImpl implements ShortenUrlService {
 
     @Autowired
-    @Qualifier("algorithmBase32")
+    private Map<String, ShortenUrlAlgorithm> algorithmMap;
+
     private ShortenUrlAlgorithm shortenUrlAlgorithm;
 
     @Autowired
@@ -34,12 +38,26 @@ public class ShortenUrlServiceImpl implements ShortenUrlService {
     @Value("${hoon.server.domain}")
     private String serverDomain;
 
+    @Value("${hoon.strategy.algrithm}")
+    private String strategyAlgorithm;
+
+    @PostConstruct
+    public void init() {
+        log.info("service init strategyAlgorithm : [{}]", strategyAlgorithm);
+        if (StringUtils.isEmpty(strategyAlgorithm)) {
+            shortenUrlAlgorithm = algorithmMap.get("algorithmBase62"); //잔략 살정이 없으면 기본으로 base62 사용
+        } else {
+            shortenUrlAlgorithm = algorithmMap.get(strategyAlgorithm);
+        }
+        log.info("service init shortenUrlAlgorithm : {}", shortenUrlAlgorithm);
+    }
+
     @Transactional(readOnly = false)
     public ShortenUrlVO findShortenUrl(String longUrl) {
         //longUrl을 DB에서 찾는다. 없으면 생성한다.
         ShortenUrl existShortenUrlEntity = shortenUrlRepository.findByOriginUrl(longUrl);
         if (existShortenUrlEntity != null) {
-            return ShortenUrlVO.convertToVO(existShortenUrlEntity);
+            return ShortenUrlVO.convertToVO(existShortenUrlEntity).add(getServerDomain());
         }
 
         ShortenUrl shortenUrlEntity = new ShortenUrl();

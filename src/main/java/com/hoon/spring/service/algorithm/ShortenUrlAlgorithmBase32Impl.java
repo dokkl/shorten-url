@@ -20,7 +20,7 @@ public class ShortenUrlAlgorithmBase32Impl implements ShortenUrlAlgorithm {
     public String encode(Long value) {
         final StringBuilder sb = new StringBuilder();
         do {
-            int i = (int)(value % 62);
+            int i = (int)(value % 32);
             sb.append(BASE32[i]);
             log.info("32encode : {} , sb : {} : {} : {}", String.format("%10d", value), String.format("%2d", i), BASE32[i], sb.toString());
             value /= 32;

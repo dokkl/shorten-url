@@ -3,23 +3,56 @@
 <head>
     <meta charset="UTF-8" />
     <title>Title</title>
+    <style>
+        #wrap { text-align:center; vertical-align:middle; padding:100px;}
+
+        table{
+            width: 1000px;
+            height: 100px;
+            margin: auto;
+            text-align: left;
+        }
+    </style>
+    <script language="javascript">
+        var clearChk=true;
+
+        // 마우스가 클릭되었을때 초기 메시지를 클리어
+        function clearMessage(frm) {
+            if(clearChk){
+                frm.longUrl.value="";
+                clearChk=false;
+            }
+        }
+
+    </script>
 </head>
 <body>
+<div id="wrap">
     <div>hoon url shortener</div>
     <div>
-    <form action="shortenUrl" method="post">
-        <label>Paste your long URL here:</label><br/>
-        <input type="text" name="longUrl" size="30"/><button type="submit" value="Submit">ShortenURL</button>
-    </form>
+        <form action="shortenUrl" method="post">
+            <label>Paste your long URL here:</label><br/>
+            <input type="text" name="longUrl" size="80" value="Your original URL here" onFocus="clearMessage(this.form);" />
+            <button type="submit" value="Submit">ShortenURL</button>
+        </form>
     </div>
     <div>
         <span th:text="${message}"></span>
     </div>
-
-    <div th:if="${shortenUrlVO != null}">
-        <span th:text="${shortenUrlVO.shortenUrl}"></span>
-        <span th:text="${shortenUrlVO.originUrl}"></span>
-        <span th:text="${shortenUrlVO.createdAt}"></span>
-    </div>
+    <table th:if="${shortenUrlVO != null}">
+        <tr bgcolor="#f0f8ff">
+            <th>original URL</th>
+            <th>shorten URL</th>
+            <th>createdAt</th>
+        </tr>
+        <tr>
+            <td width="50%"><span th:text="${shortenUrlVO.originUrl}"></span></td>
+            <td width="30%"><a href='' id="surl" th:href="${shortenUrlVO.shortenUrl}"><span th:text="${shortenUrlVO.shortenUrl}"></span></a>
+                <!--<button type="button" width="60" height="60" border="0" onclick="clipboard('http://localhost:8080')" >copy</button>-->
+            </td>
+            <td width="20%"><span th:text="${#dates.format(shortenUrlVO.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
